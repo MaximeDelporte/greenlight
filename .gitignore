@@ -1,3 +1,6 @@
 # air
 tmp
 .air.toml
+
+# jetbrains
+.idea
