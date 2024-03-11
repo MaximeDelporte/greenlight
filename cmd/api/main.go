@@ -57,7 +57,7 @@ func main() {
 
 func handler(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		w = &Interceptor{writer: w}
+		w = &Interceptor{writer: w, request: r}
 		h.ServeHTTP(w, r)
 	}
 

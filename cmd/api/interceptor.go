@@ -8,12 +8,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 )
 import "net/http"
 
 type Interceptor struct {
 	writer     http.ResponseWriter
+	request    *http.Request
 	overridden bool
 }
 
@@ -21,10 +23,13 @@ func (i *Interceptor) WriteHeader(statusCode int) {
 	switch statusCode {
 	case 500:
 		writeJSON("Custom 500 message / content", statusCode, i)
-	case 404:
-		writeJSON("Custom 404 message", statusCode, i)
 	case 403:
-		writeJSON("Custom 403 message", statusCode, i)
+		writeJSON("You can't access this resource.", statusCode, i)
+	case 404:
+		writeJSON("The requested resource could not be found.", statusCode, i)
+	case 405:
+		message := fmt.Sprintf("The %s method is not supported for this resource.", i.request.Method)
+		writeJSON(message, statusCode, i)
 	default:
 		i.writer.WriteHeader(statusCode)
 		return
